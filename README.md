@@ -10,3 +10,5 @@ Steps to execute this package(do it in separated terminals):
 1. roslaunch turtlebot_gazebo turtlebot_world.launch
 2. rosrun turtle_monitor location_monitor_node.py
 3. rostopic echo /closest_landmark
+To see if it works, execute the turtlebot teleop package and move the robot
+4. roslaunch turtlebot_teleop keyboard_teleop.launch 
