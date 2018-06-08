@@ -43,6 +43,8 @@ class LandmarkMonitor(object):
 		landmarkPub.distance = closest_distance
 		self._pub.publish(landmarkPub)
 		
+		if closest_distance < 1:
+			rospy.loginfo("Turtlebot is near the {}".format(closest_name))
 		#Print in screen
 		"""
 		l = []
