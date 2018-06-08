@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import rospy
+import math
 from  nav_msgs.msg import Odometry
+from turtle_monitor.msg import LandmarkDistance
 
 #Position of landmarks in turtlebot gazebo enviroment
 landmarks = []
@@ -10,7 +12,11 @@ landmarks.append(("Barrier", -4.0, -1.0))
 landmarks.append(("Bookshelve", 0, 1.53026))
 
 def distance(x, y, l_x, l_y):
-	pass
+	xdistance = x - l_x
+	ydistance = y - l_y
+	#rospy.loginfo("x: {}, y:{}".format(x,y))
+	#calculating the euclidean distance
+	return math.sqrt((xdistance*xdistance) + (ydistance*ydistance))
 
 def callback(msg):
 	#we can access to this data through executing turtlebot_gazebo
@@ -19,11 +25,26 @@ def callback(msg):
 	x = msg.pose.pose.position.x
 	y = msg.pose.pose.position.y
 	#We show the position with odometry
-	#rospy.loginfo('x: {}, y: {}'.format(x,y))
+	#rospy.loginfo('-----------------x: {}, y: {}'.format(x,y))
+
+	#variables for the close landmark
 	closest_name = None
 	closest_distance = None
+	#comparison landmark to robot distance
 	for l_name, l_x, l_y in landmarks:
-		landDistance = distance(x,y, l_x, l_y)
+		landDistance = distance(x, y, l_x, l_y)
+		if closest_distance is None or landDistance < closest_distance:
+			#setting new closest one
+			closest_name = l_name
+			closest_distance = landDistance
+
+	#lets do something with closest distance
+	l = []
+	l.append(closest_name)
+	l.append(closest_distance)
+	logD = "The closest obstacule is: {}, its distance is: {}".format(l[0],l[1])
+	rospy.loginfo(logD)
+	#rospy.loginfo(len(l))
 
 def main():
 	#initialize ros node
